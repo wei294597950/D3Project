@@ -1,0 +1,136 @@
+<html>
+    <script src="./static/js/d3.min.js" charset="utf-8"></script>
+    <body>
+        <!-- <p>Hello World</p>
+        <p>Hello World</p>
+        <p>Hello World</p> -->
+
+    <script>
+        //数据绑定dom
+    var p = d3.select("body").selectAll("p").text("Ni Hao");
+    p.style('color', 'red');
+    var str = "china";
+    var dataset = ["I like dog","I like cat","I like fish"];
+    p.data(dataset)
+        .text(function(d,i){
+            return d;
+        })
+    // p.datum(str);
+    // p.text(function(i,d){
+    //     return "第"+i+"个元素是"+d;
+    // })
+    var width = 500;  //画布的宽度
+    var height = 500;   //画布的高度
+
+    var svg = d3.select("body")     //选择文档中的body元素
+        .append("svg")          //添加一个svg元素
+        .attr("width", width)       //设定宽度
+        .attr("height", height) ;   //设定高度
+    // /var dataset = [ 250 , 210 , 170 , 130, 90 ];  //数据（表示矩形的宽度）
+
+
+    var dataset1 = [10, 20, 30, 40, 33, 24, 12, 5,0];
+
+
+    var min = d3.min(dataset1);
+    var max = d3.max(dataset1);
+    var rectHeight = 25;   //每个矩形所占的像素高度(包括空白)
+    var linearx = d3.scaleBand()
+            .domain(d3.range(dataset1.length))
+            .range([0, 500]);
+
+    var lineary = d3.scaleLinear()
+            .domain([min, max])
+            .range([500,0]);
+
+    
+    var xAxis = d3.axisBottom().scale(linearx);
+    var yAxis = d3.axisLeft().scale(lineary);
+
+    svg.selectAll("rect")// 选择svg内所有的矩形，数量为0
+        .data(dataset1)// 将数组与元素数量为0的选择集绑定
+        .enter()//指定选择集的enter部分
+        .append("rect") // 添加足够数量的矩形元素
+        .attr("x",function(d,i){
+            return linearx(i)+10;
+        })
+        .attr("y",function(d){
+            console.log(lineary(d))
+            return lineary(d);
+        })
+        .attr("height",function(d){
+            return 500-lineary(d);
+        })
+        
+        .attr("width",rectHeight)
+        .attr("fill","steelblue")
+        .transition()
+        .duration(1000)
+        .delay(2000)
+        //.ease("bounce")
+        .attr("fill","red");
+
+        //.attr("transform", "translate(50, -50)");
+    //线性比例尺
+
+
+
+
+    // linear(0.9);    //返回 0
+    // linear(2.3);    //返回 175
+    // linear(3.3);    //返回 300
+
+
+    svg.append("g")     // 在svg中添加分组元素
+    .attr("class", "axis")      // 设定坐标轴组件的class
+    .attr("transform", "translate(50, 470)")        // 通过transform设定坐标轴的位置
+    .call(xAxis);        // 添加坐标轴
+
+    svg.append("g")     // 在svg中添加分组元素
+    .attr("class", "axis")      // 设定坐标轴组件的class
+    .attr("transform", "translate(50, -30)")        // 通过transform设定坐标轴的位置
+    .call(yAxis);        // 添加坐标轴
+
+        svg.append("rect")
+        .attr("x",300)
+        .attr("y",300)
+        .attr("width",linearx(3.3))
+        .attr("height",linearx(3.3))
+        .attr("fill","steelblue");
+
+    //序数比例尺
+
+
+    var index = [0, 1, 2, 3, 4];
+    var color = ["red", "blue", "green", "yellow", "black"];
+
+
+    var ordinal = d3.scaleOrdinal()
+            .domain(index)
+            .range(color);
+
+    ordinal(0); //返回 red
+    ordinal(2); //返回 green
+    ordinal(4); //返回 black
+
+    svg.selectAll("rect").
+    attr("transform","translate(50,-30)")
+    .on("mouseover",function(d,i){
+            d3.select(this)
+                .attr("fill","yellow");
+        });
+
+    var dataset = [ 30 , 10 , 43 , 55 , 13 ];
+    var pie = d3.pie()(dataset);
+
+    var arc = d3.arc();
+
+    arc({
+    innerRadius: 0,
+    outerRadius: 100,
+    startAngle: 0,
+    endAngle: Math.PI / 2
+    }); // "M0,-100A100,100,0,0,1,100,0L0,0Z"
+    </script>
+    </body>
+</html>

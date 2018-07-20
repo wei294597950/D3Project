@@ -1,0 +1,89 @@
+
+    
+    <html>  
+            <head>  
+                  <meta charset="utf-8">  
+                  <title>Pie</title>  
+            </head> 
+           
+          <style>
+           
+           
+          </style>
+              <body>  
+                  <script src="./static/js/4.x/d3.min.js" charset="utf-8"></script>
+                  <script>
+                  
+
+                  
+                  var svg2 = d3.select("body").append("svg")
+                                          .attr("width",1000)
+                                          .attr("height",1000);
+                      //canvas.attr("transform","translate(300,300)");
+          
+          var data = [
+            {date: new Date(2007, 3, 24), value: 60},
+            {date: new Date(2007, 3, 25), value: 90},
+            {date: new Date(2007, 3, 26), value: 50},
+            {date: new Date(2007, 3, 27), value: 20},
+            {date: new Date(2007, 3, 30), value: 10},
+            {date: new Date(2007, 4,  1), value: 100},
+          ];
+                  
+              // var min = d3.min(data);
+              // var max = d3.max(data);
+              // var rectHeight = 25;   //每个矩形所占的像素高度(包括空白)
+              // var x = d3.scaleBand()
+              //         .domain(d3.range(data,function(d){
+              //             return d[0];
+              //         }))
+              //         .range([0, 500]);
+              var x = d3.scaleTime()
+                          .domain([d3.min(data,function(d){
+                          return d.date;
+                      }), d3.max(data,function(d){
+                          return d.date;
+                      })])
+                          .range([0, 500]);
+              console.log(d3.max(data,function(d){
+                          return d.value;
+                      }));
+              var y = d3.scaleLinear()
+                      .domain([0, d3.max(data,function(d){
+                          return d.value;
+                      })])
+                      .range([500,0]);
+              var xAxis = d3.axisBottom().scale(x);
+              var yAxis = d3.axisLeft().scale(y);
+              //var data = [[1, 2], [2, 4],[3, 66],[4, 8], [5, 10]];
+                  var line = d3.area()
+                              .x(function(d) { return x(d.date); })
+                              .y0(500)
+                              .y1(function(d) { return y(d.value); })
+                              //.curve(d3.curveStep)
+                              .curve(d3.curveCatmullRom.alpha(0.5));//曲线
+          
+              svg2.append("g")
+                  .append("path")
+                  .attr('stroke', '#333')
+                  .attr('stroke-width', '1')
+                  .attr('fill', 'red')
+                  .attr("d", line(data))
+                  .attr("transform","translate(50,-30)");
+                                      
+              svg2.append("g")     // 在svg中添加分组元素
+                  .attr("class", "axis")      // 设定坐标轴组件的class
+                  .attr("transform", "translate(50, 470)")        // 通过transform设定坐标轴的位置
+                  .call(xAxis);        // 添加坐标轴
+          
+              svg2.append("g")     // 在svg中添加分组元素
+              .attr("class", "axis")      // 设定坐标轴组件的class
+              .attr("transform", "translate(50, -0)")        // 通过transform设定坐标轴的位置
+              .call(yAxis);        // 添加坐标轴
+          
+          
+                  </script>  
+                  
+              </body>  
+          </html>  
+          
